@@ -4,6 +4,41 @@ import path from "path";
 import { app, shell } from "electron";
 import type { Client, Virement } from "../../shared/types";
 
+const POLICE_REGULIER = "Segoe";
+const POLICE_GRAS = "SegoeG";
+const POLICE_ITALIQUE = "SegoeI";
+
+function enregistrerPolices(doc: PDFKit.PDFDocument): void {
+  const fontsDir =
+    process.platform === "win32"
+      ? path.join("C:", "Windows", "Fonts")
+      : "/usr/share/fonts";
+
+  const candidats = [
+    { nom: "segoeui.ttf", gras: "segoeuib.ttf", italique: "segoeuii.ttf" },
+    { nom: "arial.ttf", gras: "arialbd.ttf", italique: "ariali.ttf" },
+  ];
+
+  for (const c of candidats) {
+    const regulier = path.join(fontsDir, c.nom);
+    const gras = path.join(fontsDir, c.gras);
+    const italique = path.join(fontsDir, c.italique);
+
+    if (fs.existsSync(regulier)) {
+      doc.registerFont(POLICE_REGULIER, regulier);
+      if (fs.existsSync(gras)) doc.registerFont(POLICE_GRAS, gras);
+      else doc.registerFont(POLICE_GRAS, regulier);
+      if (fs.existsSync(italique)) doc.registerFont(POLICE_ITALIQUE, italique);
+      else doc.registerFont(POLICE_ITALIQUE, regulier);
+      return;
+    }
+  }
+
+  doc.registerFont(POLICE_REGULIER, "Helvetica");
+  doc.registerFont(POLICE_GRAS, "Helvetica-Bold");
+  doc.registerFont(POLICE_ITALIQUE, "Helvetica-Oblique");
+}
+
 export interface DonneesAvis {
   virement: Virement;
   emetteur: Client;
@@ -46,8 +81,10 @@ export function genererAvisVirement(donnees: DonneesAvis): Promise<string> {
   const stream = fs.createWriteStream(cheminComplet);
   doc.pipe(stream);
 
+  enregistrerPolices(doc);
+
   doc
-    .font("Helvetica-Bold")
+    .font(POLICE_GRAS)
     .fontSize(18)
     .fillColor("#121212")
     .text(nomBanque, { align: "center" });
@@ -55,7 +92,7 @@ export function genererAvisVirement(donnees: DonneesAvis): Promise<string> {
   doc.moveDown(0.5);
 
   doc
-    .font("Helvetica")
+    .font(POLICE_REGULIER)
     .fontSize(11)
     .fillColor("#4d4d4d")
     .text(`Date : ${dateFormatee}`, { align: "center" });
@@ -63,7 +100,7 @@ export function genererAvisVirement(donnees: DonneesAvis): Promise<string> {
   doc.moveDown(1);
 
   doc
-    .font("Helvetica-Bold")
+    .font(POLICE_GRAS)
     .fontSize(16)
     .fillColor("#1ed760")
     .text(`AVIS DE VIREMENT N°${numeroVirement}`, { align: "center" });
@@ -79,18 +116,18 @@ export function genererAvisVirement(donnees: DonneesAvis): Promise<string> {
 
   doc.moveDown(1.5);
 
-  doc.fillColor("#121212").font("Helvetica-Bold").fontSize(11);
+  doc.fillColor("#121212").font(POLICE_GRAS).fontSize(11);
   doc.text("EMETTEUR");
-  doc.font("Helvetica").fontSize(11);
+  doc.font(POLICE_REGULIER).fontSize(11);
   doc.text(`N° de compte : ${emetteur.numCompte}`);
   doc.text(`${emetteur.nom} ${emetteur.prenoms}`);
   doc.text(`Solde actuel : ${formatNombre(soldeApresEmetteur)} Ar`);
 
   doc.moveDown(1);
 
-  doc.fillColor("#121212").font("Helvetica-Bold").fontSize(11);
+  doc.fillColor("#121212").font(POLICE_GRAS).fontSize(11);
   doc.text("BENEFICIAIRE");
-  doc.font("Helvetica").fontSize(11);
+  doc.font(POLICE_REGULIER).fontSize(11);
   doc.text(`N° de compte : ${beneficiaire.numCompte}`);
   doc.text(`${beneficiaire.nom} ${beneficiaire.prenoms}`);
   doc.text(
@@ -107,14 +144,14 @@ export function genererAvisVirement(donnees: DonneesAvis): Promise<string> {
 
   doc
     .fillColor("#000000")
-    .font("Helvetica-Bold")
+    .font(POLICE_GRAS)
     .fontSize(14)
     .text("MONTANT DU VIREMENT", doc.page.margins.left + 20, boxY + 12, {
       width: doc.page.width - doc.page.margins.left - doc.page.margins.right - 40,
     });
 
   doc
-    .font("Helvetica-Bold")
+    .font(POLICE_GRAS)
     .fontSize(20)
     .text(montantFormate, doc.page.margins.left + 20, boxY + 32, {
       width: doc.page.width - doc.page.margins.left - doc.page.margins.right - 40,
@@ -125,7 +162,7 @@ export function genererAvisVirement(donnees: DonneesAvis): Promise<string> {
 
   doc.moveDown(2);
   doc
-    .font("Helvetica-Oblique")
+    .font(POLICE_ITALIQUE)
     .fontSize(9)
     .fillColor("#7c7c7c")
     .text(
@@ -141,7 +178,7 @@ export function genererAvisVirement(donnees: DonneesAvis): Promise<string> {
 
   doc.moveDown(3);
   doc
-    .font("Helvetica")
+    .font(POLICE_REGULIER)
     .fontSize(10)
     .fillColor("#121212")
     .text("Signature de la banque", doc.page.margins.left, doc.y, {
