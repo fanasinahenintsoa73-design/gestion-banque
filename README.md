@@ -110,6 +110,15 @@ src/
 - **Parametres** : Configuration SMTP, test connexion, test envoi, dossier PDF, stats base, securite
 - **Base de donnees** : SQLite WAL + foreign_keys, transactions ACID, seed initial
 
+## Regenerer l'icone
+
+L'icone par defaut d'Electron est remplacee par une feuille verte
+personnalisee. Pour la regenerer :
+
+```bash
+npm run build:icon    # Genere les PNG + .ico Windows
+```
+
 ## Licence
 
 Projet academique.

@@ -1,4 +1,5 @@
 import { useEffect, useState, useMemo, useRef, useCallback } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Plus, Search, Pencil, Trash2, Users, Wallet, X } from "lucide-react";
 import { Card, CardHeader } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
@@ -15,6 +16,7 @@ import type { Client } from "@shared/types";
 type ModeModal = null | "creer" | "modifier" | "supprimer";
 
 export default function Clients() {
+  const [searchParams] = useSearchParams();
   const [clients, setClients] = useState<Client[]>([]);
   const [chargement, setChargement] = useState(true);
   const [recherche, setRecherche] = useState("");
@@ -47,8 +49,14 @@ export default function Clients() {
   }, []);
 
   useEffect(() => {
-    charger();
-  }, [charger]);
+    const termeUrl = searchParams.get("q");
+    if (termeUrl) {
+      setRecherche(termeUrl);
+      charger(termeUrl);
+    } else {
+      charger();
+    }
+  }, [charger, searchParams]);
 
   const handleRechercheChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const terme = e.target.value;

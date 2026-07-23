@@ -14,6 +14,11 @@ export const schemaClient = z.object({
     .max(20)
     .regex(/^[+\d\s().-]+$/, "Caracteres telephone invalides"),
   mail: z.string().email("Adresse email invalide").max(100, "Maximum 100 caracteres"),
+  solde: z
+    .number({ invalid_type_error: "Solde invalide" })
+    .int("Le solde doit etre un entier")
+    .nonnegative("Le solde ne peut pas etre negatif")
+    .default(0),
 });
 
 export type ClientFormValues = z.infer<typeof schemaClient>;

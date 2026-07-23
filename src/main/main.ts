@@ -1,5 +1,6 @@
 import { app, BrowserWindow, ipcMain } from "electron";
 import path from "path";
+import fs from "fs";
 import { getDatabase, fermerDatabase } from "./db/connection";
 import { verifierSeed } from "./db/seed";
 import { enregistrerHandlersClients } from "./ipc/clients";
@@ -11,7 +12,27 @@ import { chargerDotenv } from "./services/emailService";
 
 const isDev = process.env.NODE_ENV === "development";
 
+function getIconPath(): string | undefined {
+  const candidats = [
+    path.join(__dirname, "..", "resources", "icon.ico"),
+    path.join(__dirname, "..", "..", "resources", "icon.ico"),
+    path.join(process.cwd(), "resources", "icon.ico"),
+  ];
+
+  for (const chemin of candidats) {
+    if (fs.existsSync(chemin)) {
+      console.log("[icon] Utilisation de l'icone :", chemin);
+      return chemin;
+    }
+  }
+
+  console.log("[icon] Aucune icone personnalisee trouvee, utilisation de l'icone par defaut");
+  return undefined;
+}
+
 function createWindow(): void {
+  const iconPath = getIconPath();
+
   const mainWindow = new BrowserWindow({
     width: 1280,
     height: 800,
@@ -19,6 +40,7 @@ function createWindow(): void {
     minHeight: 700,
     backgroundColor: "#121212",
     autoHideMenuBar: true,
+    ...(iconPath ? { icon: iconPath } : {}),
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,
@@ -29,7 +51,7 @@ function createWindow(): void {
   if (isDev) {
     mainWindow.loadURL("http://localhost:5173");
   } else {
-    mainWindow.loadFile(path.join(__dirname, "../../dist/index.html"));
+    mainWindow.loadFile(path.join(__dirname, "..", "..", "dist", "index.html"));
   }
 }
 

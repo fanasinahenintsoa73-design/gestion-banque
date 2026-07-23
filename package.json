@@ -10,6 +10,7 @@
     "dev": "concurrently -k \"npm:dev:vite\" \"npm:dev:electron\"",
     "build:vite": "vite build",
     "build:electron": "tsc -p tsconfig.electron.json && node -e \"require('fs').writeFileSync('dist-electron/main/package.json',JSON.stringify({type:'commonjs'}))\" && node -e \"require('fs').cpSync('src/main/db/schema.sql','dist-electron/main/db/schema.sql')\"",
+    "build:icon": "node src/main/build/generateIcon.cjs",
     "build": "npm run build:electron && npm run build:vite"
   },
   "dependencies": {
