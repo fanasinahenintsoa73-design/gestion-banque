@@ -88,14 +88,6 @@ export function genererAvisVirement(donnees: DonneesAvis): Promise<string> {
 
   doc.moveDown(1);
 
-  doc
-    .font("Helvetica-Bold")
-    .fontSize(14)
-    .fillColor("#1ed760")
-    .text("A", { align: "center" });
-
-  doc.moveDown(1);
-
   doc.fillColor("#121212").font("Helvetica-Bold").fontSize(11);
   doc.text("BENEFICIAIRE");
   doc.font("Helvetica").fontSize(11);
