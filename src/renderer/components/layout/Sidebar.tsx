@@ -66,10 +66,6 @@ export function Sidebar() {
           ))}
         </ul>
 
-        <div className="mt-4 px-3 py-3 bg-bgElevated rounded-md">
-          <p className="text-xs text-textSecondary">Version 1.0.0</p>
-          <p className="text-xs text-textSecondary mt-1">SQLite + Electron</p>
-        </div>
       </div>
     </aside>
   );
