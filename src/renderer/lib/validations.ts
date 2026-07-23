@@ -6,8 +6,16 @@ export const schemaClient = z.object({
     .min(3, "Minimum 3 caracteres")
     .max(20, "Maximum 20 caracteres")
     .regex(/^[A-Za-z0-9-]+$/, "Caracteres alphanumeriques et tirets uniquement"),
-  nom: z.string().min(1, "Le nom est obligatoire").max(50),
-  prenoms: z.string().min(1, "Les prenoms sont obligatoires").max(100),
+  nom: z
+    .string()
+    .min(1, "Le nom est obligatoire")
+    .max(50)
+    .regex(/^[\p{L}\s-]+$/u, "Lettres uniquement (pas de chiffres)"),
+  prenoms: z
+    .string()
+    .min(1, "Les prenoms sont obligatoires")
+    .max(100)
+    .regex(/^[\p{L}\s-]+$/u, "Lettres uniquement (pas de chiffres)"),
   tel: z
     .string()
     .min(6, "Numero de telephone invalide")

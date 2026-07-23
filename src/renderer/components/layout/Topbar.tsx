@@ -1,8 +1,7 @@
-import { useState, useCallback } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { Search, Bell, User, Wifi, WifiOff } from "lucide-react";
+import { useState } from "react";
+import { useLocation } from "react-router-dom";
+import { Bell, User, Wifi, WifiOff } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
-import { Input } from "@/components/ui/Input";
 import { cn } from "@/lib/utils";
 
 const titresPages: Record<string, string> = {
@@ -19,15 +18,8 @@ export function Topbar() {
   const location = useLocation();
   const navigate = useNavigate();
   const [connecte, setConnecte] = useState(true);
-  const [recherche, setRecherche] = useState("");
 
   const titre = titresPages[location.pathname] || "Banque Desktop";
-
-  const lancerRecherche = useCallback(() => {
-    const terme = recherche.trim();
-    if (!terme) return;
-    navigate(`/clients?q=${encodeURIComponent(terme)}`);
-  }, [recherche, navigate]);
 
   return (
     <header className="h-16 bg-bgSurface border-b border-border px-6 flex items-center justify-between gap-4">
@@ -35,16 +27,6 @@ export function Topbar() {
         <h2 className="text-xl font-bold text-textPrimary tracking-tight truncate">
           {titre}
         </h2>
-      </div>
-
-      <div className="flex-1 max-w-md">
-        <Input
-          placeholder="Rechercher un client..."
-          iconeGauche={<Search size={16} />}
-          value={recherche}
-          onChange={(e) => setRecherche(e.target.value)}
-          onKeyDown={(e) => { if (e.key === "Enter") lancerRecherche(); }}
-        />
       </div>
 
       <div className="flex items-center gap-3">
