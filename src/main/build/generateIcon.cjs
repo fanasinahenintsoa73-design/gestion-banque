@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const zlib = require("zlib");
 
-const VERT_SPOTIFY = [30, 215, 96];
+const VERT_SPOTIFY = [40, 225, 106];
 const VERT_FONCE = [29, 185, 84];
 const VERT_TRES_FONCE = [20, 130, 60];
 const BLANC = [255, 255, 255];
@@ -52,11 +52,11 @@ function createLeafIcon(size) {
     }
   }
 
-  // 2. Feuille blanche stylisee
+  // 2. Feuille verte stylisee (plus grande)
   const leafCenterX = cx;
   const leafCenterY = cy;
-  const leafLength = size * 0.6;
-  const leafWidth = size * 0.28;
+  const leafLength = size * 0.8;
+  const leafWidth = size * 0.38;
   const angle = -Math.PI / 4.5;
 
   for (let y = 0; y < size; y++) {
@@ -71,7 +71,7 @@ function createLeafIcon(size) {
 
       if (Math.abs(xr) > widthAtT) continue;
 
-      setPixel(pixels, size, x, y, BLANC[0], BLANC[1], BLANC[2]);
+      setPixel(pixels, size, x, y, VERT_FONCE[0], VERT_FONCE[1], VERT_FONCE[2]);
 
       if (Math.abs(xr) < size * 0.008 && Math.abs(t) < 0.9) {
         setPixel(pixels, size, x, y, VERT_TRES_FONCE[0], VERT_TRES_FONCE[1], VERT_TRES_FONCE[2], 200);
