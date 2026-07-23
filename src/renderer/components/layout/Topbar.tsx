@@ -16,7 +16,6 @@ const titresPages: Record<string, string> = {
 
 export function Topbar() {
   const location = useLocation();
-  const navigate = useNavigate();
   const [connecte, setConnecte] = useState(true);
 
   const titre = titresPages[location.pathname] || "Banque Desktop";

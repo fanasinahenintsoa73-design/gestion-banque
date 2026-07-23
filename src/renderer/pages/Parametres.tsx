@@ -5,7 +5,6 @@ import {
   X,
   RefreshCw,
   Send,
-  Info,
   Server,
   FileText,
   Shield,
@@ -32,22 +31,14 @@ export default function Parametres() {
     message: string;
   } | null>(null);
 
-  const [stats, setStats] = useState<{
-    clients: number;
-    prets: number;
-    virements: number;
-    rendus: number;
-  } | null>(null);
   const [dossierPdf, setDossierPdf] = useState<string>("");
 
   const charger = async () => {
-    const [c, s, d] = await Promise.all([
+    const [c, d] = await Promise.all([
       window.api.email.config(),
-      window.api.db.stats(),
       window.api.pdf.dossierSortie(),
     ]);
     setConfig(c);
-    setStats(s);
     setDossierPdf(d);
   };
 
@@ -284,76 +275,6 @@ SMTP_PASS=mot_de_passe_application_16_caracteres`}
             dans ce dossier et ouverts dans le viewer systeme.
           </Alert>
         </div>
-      </Card>
-
-      <Card>
-        <CardHeader
-          titre="Informations systeme"
-          action={<Info size={18} className="text-textSecondary" />}
-        />
-        {stats ? (
-          <div className="space-y-3">
-            <div className="grid grid-cols-4 gap-3">
-              <div className="p-3 bg-bgElevated rounded-md">
-                <p className="text-xs text-textSecondary uppercase tracking-wider font-bold mb-1">
-                  Clients
-                </p>
-                <p className="text-2xl font-bold">{stats.clients}</p>
-              </div>
-              <div className="p-3 bg-bgElevated rounded-md">
-                <p className="text-xs text-textSecondary uppercase tracking-wider font-bold mb-1">
-                  Virements
-                </p>
-                <p className="text-2xl font-bold">{stats.virements}</p>
-              </div>
-              <div className="p-3 bg-bgElevated rounded-md">
-                <p className="text-xs text-textSecondary uppercase tracking-wider font-bold mb-1">
-                  Prets
-                </p>
-                <p className="text-2xl font-bold">{stats.prets}</p>
-              </div>
-              <div className="p-3 bg-bgElevated rounded-md">
-                <p className="text-xs text-textSecondary uppercase tracking-wider font-bold mb-1">
-                  Remboursements
-                </p>
-                <p className="text-2xl font-bold">{stats.rendus}</p>
-              </div>
-            </div>
-
-            <div className="h-px bg-border my-2" />
-
-            <dl className="space-y-2 text-sm">
-              <div className="flex justify-between">
-                <dt className="text-textSecondary">Application</dt>
-                <dd className="font-semibold">Banque Desktop</dd>
-              </div>
-              <div className="flex justify-between">
-                <dt className="text-textSecondary">Version</dt>
-                <dd className="font-mono">1.0.0</dd>
-              </div>
-              <div className="flex justify-between">
-                <dt className="text-textSecondary">Stack</dt>
-                <dd>Electron 31 + React 18 + TypeScript</dd>
-              </div>
-              <div className="flex justify-between">
-                <dt className="text-textSecondary">Base de donnees</dt>
-                <dd>SQLite (better-sqlite3)</dd>
-              </div>
-              <div className="flex justify-between">
-                <dt className="text-textSecondary">PDF</dt>
-                <dd>pdfkit</dd>
-              </div>
-              <div className="flex justify-between">
-                <dt className="text-textSecondary">Email</dt>
-                <dd>nodemailer (SMTP)</dd>
-              </div>
-            </dl>
-          </div>
-        ) : (
-          <p className="text-sm text-textSecondary text-center py-4">
-            Chargement...
-          </p>
-        )}
       </Card>
 
       <Card>
