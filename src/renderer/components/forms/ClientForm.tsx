@@ -37,6 +37,7 @@ export function ClientForm({
     formState: { errors, isSubmitting },
   } = useForm<ClientFormValues>({
     resolver: zodResolver(schemaClient),
+    mode: "onChange",
     defaultValues: clientExistant
       ? {
           numCompte: clientExistant.numCompte,

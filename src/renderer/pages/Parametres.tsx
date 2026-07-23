@@ -5,6 +5,7 @@ import {
   X,
   RefreshCw,
   Send,
+  Info,
   Server,
   FileText,
   Shield,
@@ -31,14 +32,22 @@ export default function Parametres() {
     message: string;
   } | null>(null);
 
+  const [stats, setStats] = useState<{
+    clients: number;
+    prets: number;
+    virements: number;
+    rendus: number;
+  } | null>(null);
   const [dossierPdf, setDossierPdf] = useState<string>("");
 
   const charger = async () => {
-    const [c, d] = await Promise.all([
+    const [c, s, d] = await Promise.all([
       window.api.email.config(),
+      window.api.db.stats(),
       window.api.pdf.dossierSortie(),
     ]);
     setConfig(c);
+    setStats(s);
     setDossierPdf(d);
   };
 
@@ -275,6 +284,45 @@ SMTP_PASS=mot_de_passe_application_16_caracteres`}
             dans ce dossier et ouverts dans le viewer systeme.
           </Alert>
         </div>
+      </Card>
+
+      <Card>
+        <CardHeader
+          titre="Bilan"
+          action={<Info size={18} className="text-textSecondary" />}
+        />
+        {stats ? (
+          <div className="grid grid-cols-4 gap-3">
+            <div className="p-3 bg-bgElevated rounded-md">
+              <p className="text-xs text-textSecondary uppercase tracking-wider font-bold mb-1">
+                Clients
+              </p>
+              <p className="text-2xl font-bold">{stats.clients}</p>
+            </div>
+            <div className="p-3 bg-bgElevated rounded-md">
+              <p className="text-xs text-textSecondary uppercase tracking-wider font-bold mb-1">
+                Virements
+              </p>
+              <p className="text-2xl font-bold">{stats.virements}</p>
+            </div>
+            <div className="p-3 bg-bgElevated rounded-md">
+              <p className="text-xs text-textSecondary uppercase tracking-wider font-bold mb-1">
+                Prets
+              </p>
+              <p className="text-2xl font-bold">{stats.prets}</p>
+            </div>
+            <div className="p-3 bg-bgElevated rounded-md">
+              <p className="text-xs text-textSecondary uppercase tracking-wider font-bold mb-1">
+                Remboursements
+              </p>
+              <p className="text-2xl font-bold">{stats.rendus}</p>
+            </div>
+          </div>
+        ) : (
+          <p className="text-sm text-textSecondary text-center py-4">
+            Chargement...
+          </p>
+        )}
       </Card>
 
       <Card>
