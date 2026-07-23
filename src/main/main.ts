@@ -17,6 +17,7 @@ function getIconPath(): string | undefined {
     path.join(__dirname, "..", "resources", "icon.ico"),
     path.join(__dirname, "..", "..", "resources", "icon.ico"),
     path.join(process.cwd(), "resources", "icon.ico"),
+    path.join(process.cwd(), "src", "resources", "icon.ico"),
   ];
 
   for (const chemin of candidats) {
